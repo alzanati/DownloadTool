@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -20,10 +19,14 @@ void MainWindow::on_DownloadButton_clicked()
     QString url = ui->myUrl->text();
     const QByteArray byteArray = ui->myUrl->text().toUtf8();
     const char* parsedUrl = byteArray.constData();
-    switch (Download(parsedUrl))
+    CURLcode downloadCode = Download(parsedUrl);
+    switch (downloadCode)
     {
         case CURLcode::CURLE_OK :
-        _myLabel->setText("Download Has Been Complete");
+        _myLabel->setText("\n\tDownload Has Been Complete\t\t\n");
+        _myLabel->show();
+        case CURLcode::CURLE_COULDNT_RESOLVE_HOST :
+        _myLabel->setText("\n\tHost Not Resolved\t\t\n");
         _myLabel->show();
     }
 }
