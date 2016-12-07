@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QMessageBox>
 #include <curl/curl.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -31,6 +32,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QLabel* _myLabel;
+    QMessageBox* _messageBox;
+    QMessageBox::StandardButton _ok;
+    QMessageBox::StandardButton _no;
 };
 
 #endif // MAINWINDOW_H

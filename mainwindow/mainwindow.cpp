@@ -6,7 +6,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    _myLabel = new QLabel();
+    _myLabel = new QLabel(this);
+    _messageBox = new QMessageBox(this);
+    _ok = QMessageBox::Yes ;
+    _no = QMessageBox::No;
 }
 
 MainWindow::~MainWindow()
@@ -16,18 +19,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_DownloadButton_clicked()
 {
-    QString url = ui->myUrl->text();
     const QByteArray byteArray = ui->myUrl->text().toUtf8();
     const char* parsedUrl = byteArray.constData();
     CURLcode downloadCode = Download(parsedUrl);
+    int result = 0;
+
     switch (downloadCode)
     {
         case CURLcode::CURLE_OK :
-        _myLabel->setText("\n\tDownload Has Been Complete\t\t\n");
-        _myLabel->show();
+        result = _messageBox->question(this, "Download Complete",
+                                       "Do You Want To Open ?", _ok, _no);
+        if (result == QMessageBox::Yes)
+        {
+
+        }
+
         case CURLcode::CURLE_COULDNT_RESOLVE_HOST :
-        _myLabel->setText("\n\tHost Not Resolved\t\t\n");
-        _myLabel->show();
+        result = _messageBox->question(this, "Host Not Resolved",
+                                       "Do You Want To Exit ?", _ok, _no);
+        if (result == QMessageBox::Yes)
+        {
+            exit(-1);
+        }
     }
 }
 
